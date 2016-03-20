@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
+    <string name="question_text">question text string</string>
+    <string name="true_button">true button string</string>
+    <string name="false_button">false button string</string>
+    <string name="menu_settings">Settings</string>
 </resources>
