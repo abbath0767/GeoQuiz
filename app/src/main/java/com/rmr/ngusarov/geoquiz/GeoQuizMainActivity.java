@@ -38,6 +38,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 counter++;
+                counter%=questArr.length;
                 refreshQuest();
             }
         });
