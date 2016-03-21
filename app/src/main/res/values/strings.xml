@@ -1,7 +1,16 @@
 <resources>
     <string name="app_name">GeoQuiz</string>
     <string name="question_text">question text string</string>
-    <string name="true_button">true button string</string>
-    <string name="false_button">false button string</string>
+    <string name="true_button">true</string>
+    <string name="false_button">false</string>
     <string name="menu_settings">Settings</string>
+    <string name="correct_toast">Correct!</string>
+    <string name="incorrect_toast">Incorrect!</string>
+    <string name="next_button">Next</string>
+    <string name="russia_question1">Moscow the capital of the Russia?</string>
+    <string name="russia_question2">St.Peterburg the capital of the Russia??</string>
+    <string name="russia_question3">Ivanteevka is best City in the world?</string>
+    <string name="russia_question4">Korolow motto - "There start Road to Space!"</string>
+    <string name="russia_question5">Moscow have a Sea?</string>
+    <string name="russia_question6">Moscow have a Red Place?</string>
 </resources>
