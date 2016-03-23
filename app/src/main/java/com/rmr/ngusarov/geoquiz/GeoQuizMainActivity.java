@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class GeoQuizMainActivity extends AppCompatActivity {
 
-    public static final String TAG = "my debug tag";
+    public static final String TAG = "myTag";
     public static final String KEY_INDEX = "key_index";
 
     private Button mTrueButton;
@@ -18,7 +18,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
     private Button mNextButton;
     private Button mBackButton;
     private TextView mTextView;
-    private static int counter;
+    private static int counter = 0;
     private static TrueFalse[] questArr;
 
     @Override
@@ -27,9 +27,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
         Log.d(TAG, ">> on create <<");
         setContentView(R.layout.activity_geo_quiz_main);
 
-        if (savedInstanceState == null)
-            counter = 0;
-        else
+        if (savedInstanceState != null)
             counter = savedInstanceState.getInt(KEY_INDEX);
 
         questArr = new TrueFalse[]{new TrueFalse(R.string.russia_question1, true),
@@ -38,6 +36,9 @@ public class GeoQuizMainActivity extends AppCompatActivity {
                 new TrueFalse(R.string.russia_question4, true),
                 new TrueFalse(R.string.russia_question5, false),
                 new TrueFalse(R.string.russia_question6, true)};
+
+        Log.d(TAG, "quastArr length = ?" + questArr.length + ", counter = " + counter);
+        Log.d(TAG, "getQuestId " + questArr[0].getQuestionId());
 
         mTextView = (TextView) findViewById(R.id.text_view_question);
         mTextView.setText(questArr[counter].getQuestionId());
@@ -57,7 +58,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
             @Override
         public void onClick(View v) {
                 counter--;
-                counter = counter < 0 ? questArr.length : counter;
+                counter = counter < 0 ? questArr.length - 1: counter;
                 refreshQuest();
             }
         });
