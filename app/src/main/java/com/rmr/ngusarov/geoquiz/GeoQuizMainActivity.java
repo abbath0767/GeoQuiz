@@ -13,6 +13,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
 
     public static final String TAG = "myTag";
     public static final String KEY_INDEX = "key_index";
+    public static final String KEY_CHEATER_LIST = "cheater_list";
     public static final String KEY_IS_CHEATING = "key_cheating";
 	public static final String QUEST_INDEX_TRUE_FALSE_PARAMETR = "com.rmr.ngusarov.geoquiz.cheat";
 
@@ -25,6 +26,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
     private int counter = 0;
     private static TrueFalse[] questArr;
 	private boolean isCheater = false;
+    public boolean[] cheaterList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             counter = savedInstanceState.getInt(KEY_INDEX);
             isCheater = savedInstanceState.getBoolean(KEY_IS_CHEATING);
+            cheaterList = savedInstanceState.getBooleanArray(KEY_CHEATER_LIST);
         }
 
         questArr = new TrueFalse[]{new TrueFalse(R.string.russia_question1, true),
@@ -43,6 +46,10 @@ public class GeoQuizMainActivity extends AppCompatActivity {
                 new TrueFalse(R.string.russia_question4, true),
                 new TrueFalse(R.string.russia_question5, false),
                 new TrueFalse(R.string.russia_question6, true)};
+
+        cheaterList = new boolean[questArr.length];
+        for (int i = 0; i < questArr.length; i++)
+            cheaterList[i] = false;
 
         mTextView = (TextView) findViewById(R.id.text_view_question);
         mTextView.setText(questArr[counter].getQuestionId());
@@ -102,7 +109,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
 
     private void validateAnswer(View v) {
         int answerId;
-		if (isCheater)
+		if (cheaterList[counter])
 			answerId = R.string.judgement;
         else if (questArr[counter].isQuestionResult() && v.getId() == R.id.true_button)
             answerId = R.string.correct_toast;
@@ -118,6 +125,8 @@ public class GeoQuizMainActivity extends AppCompatActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) return;
         isCheater = data.getBooleanExtra(CheatActivity.ANSWER_IS_SHOWN, false);
+        if (isCheater)
+            cheaterList[counter] = true;
 	}
 
 	@Override
@@ -126,6 +135,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_INDEX, counter);
         outState.putBoolean(KEY_IS_CHEATING, isCheater);
+        outState.putBooleanArray(KEY_CHEATER_LIST, cheaterList);
     }
 
     @Override
