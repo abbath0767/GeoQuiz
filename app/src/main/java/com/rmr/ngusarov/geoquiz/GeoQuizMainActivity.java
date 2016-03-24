@@ -120,10 +120,6 @@ public class GeoQuizMainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (data == null) {
-			isCheater = false;
-			return;
-		}
 		isCheater = data.getBooleanExtra(QUEST_INDEX_TRUE_FALSE_PARAMETR, false);
 	}
 
