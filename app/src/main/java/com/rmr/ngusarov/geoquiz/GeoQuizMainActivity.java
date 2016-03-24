@@ -1,5 +1,6 @@
 package com.rmr.ngusarov.geoquiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,20 +13,25 @@ public class GeoQuizMainActivity extends AppCompatActivity {
 
     public static final String TAG = "myTag";
     public static final String KEY_INDEX = "key_index";
+	public static final String QUEST_INDEX_TRUE_FALSE_PARAMETR = "com.rmr.ngusarov.geoquiz.cheat";
 
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mNextButton;
     private Button mBackButton;
+    private Button mCheatButton;
     private TextView mTextView;
     private static int counter = 0;
     private static TrueFalse[] questArr;
+	private static boolean isCheater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, ">> on create <<");
         setContentView(R.layout.activity_geo_quiz_main);
+
+		isCheater = false;
 
         if (savedInstanceState != null)
             counter = savedInstanceState.getInt(KEY_INDEX);
@@ -43,12 +49,23 @@ public class GeoQuizMainActivity extends AppCompatActivity {
         mTextView = (TextView) findViewById(R.id.text_view_question);
         mTextView.setText(questArr[counter].getQuestionId());
 
+        mCheatButton = (Button) findViewById(R.id.cheat);
+		mCheatButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(GeoQuizMainActivity.this, CheatActivity.class);
+				i.putExtra(QUEST_INDEX_TRUE_FALSE_PARAMETR, questArr[counter].isQuestionResult());
+				startActivityForResult(i, 0);
+			}
+		});
+
         mNextButton = (Button) findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 counter++;
                 counter%=questArr.length;
+				isCheater = false;
                 refreshQuest();
             }
         });
@@ -59,6 +76,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
         public void onClick(View v) {
                 counter--;
                 counter = counter < 0 ? questArr.length - 1: counter;
+				isCheater = false;
                 refreshQuest();
             }
         });
@@ -86,6 +104,10 @@ public class GeoQuizMainActivity extends AppCompatActivity {
 
     private void validateAnswer(View v) {
         int answerId;
+		if (isCheater) {
+			Toast.makeText(this, R.string.cheting_is_wrong, Toast.LENGTH_SHORT).show();
+			return;
+		}
         if (questArr[counter].isQuestionResult() && v.getId() == R.id.true_button)
             answerId = R.string.correct_toast;
         else if (!questArr[counter].isQuestionResult() && v.getId() == R.id.false_button)
@@ -96,7 +118,16 @@ public class GeoQuizMainActivity extends AppCompatActivity {
         Toast.makeText(this, answerId, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (data == null) {
+			isCheater = false;
+			return;
+		}
+		isCheater = data.getBooleanExtra(QUEST_INDEX_TRUE_FALSE_PARAMETR, false);
+	}
+
+	@Override
     protected void onSaveInstanceState(Bundle outState) {
         Log.d(TAG, ">> save instance state coming, save int = " + counter);
         super.onSaveInstanceState(outState);
