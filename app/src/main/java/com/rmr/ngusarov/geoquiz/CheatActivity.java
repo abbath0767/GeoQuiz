@@ -12,17 +12,21 @@ public class CheatActivity extends AppCompatActivity {
 
 	private Button mCheatButton;
 	private TextView mCheatTextView;
-	static boolean isCheater;
+	boolean mAnswer = false;
+	public static final String ANSWER_IS_SHOWN = "com.rmr.ngusarov.geoquiz.show_answer";
+
+	public void setAnswerShownResult(boolean isAnswerShown) {
+		Intent data = new Intent();
+		data.putExtra(ANSWER_IS_SHOWN, isAnswerShown);
+		setResult(RESULT_OK, data);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.cheat_layout);
 
-		isCheater = false;
-
-		Intent i = getIntent();
-		final boolean answer = i.getBooleanExtra(GeoQuizMainActivity.QUEST_INDEX_TRUE_FALSE_PARAMETR, false);
+		mAnswer = getIntent().getBooleanExtra(GeoQuizMainActivity.QUEST_INDEX_TRUE_FALSE_PARAMETR, false);
 
 		mCheatTextView = (TextView) findViewById(R.id.cheat_text_view);
 
@@ -30,26 +34,12 @@ public class CheatActivity extends AppCompatActivity {
 		mCheatButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(GeoQuizMainActivity.TAG, "is cheater! = TRUE");
-				isCheater();
-				mCheatTextView.setText(String.valueOf(answer));
+				Log.d(GeoQuizMainActivity.TAG, ">> on click << is cheater = TRUE");
+				mCheatTextView.setText(String.valueOf(mAnswer));
+				mAnswer = true;
+				setAnswerShownResult(true);
 			}
 		});
 
-		makeIntent();
-
-	}
-
-	public void isCheater() {
-		isCheater = true;
-	}
-
-
-
-	public void makeIntent() {
-		Intent i = new Intent();
-		Log.d(GeoQuizMainActivity.TAG, "set cheating = " + isCheater);
-		i.putExtra(GeoQuizMainActivity.QUEST_INDEX_TRUE_FALSE_PARAMETR, isCheater);
-		setResult(RESULT_OK, i);
 	}
 }

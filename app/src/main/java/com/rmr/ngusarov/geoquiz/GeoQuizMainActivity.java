@@ -13,6 +13,7 @@ public class GeoQuizMainActivity extends AppCompatActivity {
 
     public static final String TAG = "myTag";
     public static final String KEY_INDEX = "key_index";
+    public static final String KEY_IS_CHEATING = "key_cheating";
 	public static final String QUEST_INDEX_TRUE_FALSE_PARAMETR = "com.rmr.ngusarov.geoquiz.cheat";
 
     private Button mTrueButton;
@@ -21,9 +22,9 @@ public class GeoQuizMainActivity extends AppCompatActivity {
     private Button mBackButton;
     private Button mCheatButton;
     private TextView mTextView;
-    private static int counter = 0;
+    private int counter = 0;
     private static TrueFalse[] questArr;
-	private static boolean isCheater;
+	private boolean isCheater = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +32,10 @@ public class GeoQuizMainActivity extends AppCompatActivity {
         Log.d(TAG, ">> on create <<");
         setContentView(R.layout.activity_geo_quiz_main);
 
-		isCheater = false;
-
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             counter = savedInstanceState.getInt(KEY_INDEX);
+            isCheater = savedInstanceState.getBoolean(KEY_IS_CHEATING);
+        }
 
         questArr = new TrueFalse[]{new TrueFalse(R.string.russia_question1, true),
                 new TrueFalse(R.string.russia_question2, false),
@@ -42,9 +43,6 @@ public class GeoQuizMainActivity extends AppCompatActivity {
                 new TrueFalse(R.string.russia_question4, true),
                 new TrueFalse(R.string.russia_question5, false),
                 new TrueFalse(R.string.russia_question6, true)};
-
-        Log.d(TAG, "quastArr length = ?" + questArr.length + ", counter = " + counter);
-        Log.d(TAG, "getQuestId " + questArr[0].getQuestionId());
 
         mTextView = (TextView) findViewById(R.id.text_view_question);
         mTextView.setText(questArr[counter].getQuestionId());
@@ -104,11 +102,9 @@ public class GeoQuizMainActivity extends AppCompatActivity {
 
     private void validateAnswer(View v) {
         int answerId;
-		if (isCheater) {
-			Toast.makeText(this, R.string.cheting_is_wrong, Toast.LENGTH_SHORT).show();
-			return;
-		}
-        if (questArr[counter].isQuestionResult() && v.getId() == R.id.true_button)
+		if (isCheater)
+			answerId = R.string.judgement;
+        else if (questArr[counter].isQuestionResult() && v.getId() == R.id.true_button)
             answerId = R.string.correct_toast;
         else if (!questArr[counter].isQuestionResult() && v.getId() == R.id.false_button)
             answerId = R.string.correct_toast;
@@ -120,14 +116,16 @@ public class GeoQuizMainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		isCheater = data.getBooleanExtra(QUEST_INDEX_TRUE_FALSE_PARAMETR, false);
+        if (data == null) return;
+        isCheater = data.getBooleanExtra(CheatActivity.ANSWER_IS_SHOWN, false);
 	}
 
 	@Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.d(TAG, ">> save instance state coming, save int = " + counter);
+        Log.d(TAG, ">> on save instance state <<");
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_INDEX, counter);
+        outState.putBoolean(KEY_IS_CHEATING, isCheater);
     }
 
     @Override
