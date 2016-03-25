@@ -34,6 +34,9 @@ public class GeoQuizMainActivity extends AppCompatActivity {
         Log.d(TAG, ">> on create <<");
         setContentView(R.layout.activity_geo_quiz_main);
 
+        counter = 0;
+        isCheater = false;
+
         if (savedInstanceState != null) {
             counter = savedInstanceState.getInt(KEY_INDEX);
             isCheater = savedInstanceState.getBoolean(KEY_IS_CHEATING);
@@ -161,9 +164,4 @@ public class GeoQuizMainActivity extends AppCompatActivity {
         Log.d(TAG, ">> on destroy <<");
         super.onDestroy();
     }
-
-    //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        return true;
-//    }
 }

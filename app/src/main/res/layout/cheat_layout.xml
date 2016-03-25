@@ -23,4 +23,9 @@
         android:text="@string/show_answer"
         android:id="@+id/cheat_button"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sdk_version_view"/>
+
 </LinearLayout>

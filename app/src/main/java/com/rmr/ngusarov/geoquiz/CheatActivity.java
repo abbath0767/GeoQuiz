@@ -1,6 +1,7 @@
 package com.rmr.ngusarov.geoquiz;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +13,7 @@ public class CheatActivity extends AppCompatActivity {
 
 	private Button mCheatButton;
 	private TextView mCheatTextView;
+	private TextView mSdkTextView;
 	boolean mAnswer = false;
 	public static final String ANSWER_IS_SHOWN = "com.rmr.ngusarov.geoquiz.show_answer";
 
@@ -29,6 +31,9 @@ public class CheatActivity extends AppCompatActivity {
 		mAnswer = getIntent().getBooleanExtra(GeoQuizMainActivity.QUEST_INDEX_TRUE_FALSE_PARAMETR, false);
 
 		mCheatTextView = (TextView) findViewById(R.id.cheat_text_view);
+
+		mSdkTextView = (TextView) findViewById(R.id.sdk_version_view);
+		mSdkTextView.setText("API level = " + String.valueOf(Build.VERSION.SDK_INT));
 
 		mCheatButton = (Button) findViewById(R.id.cheat_button);
 		mCheatButton.setOnClickListener(new View.OnClickListener() {
